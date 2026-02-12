@@ -1,22 +1,24 @@
 package model;
 
+import controller.EstadoPedido;
+
 public class Pedidos {
     private static final int MAX_ARTICULOS = 5; // Límite máximo de artículos por pedido
     private static int contador = 1; // Contador para generar ID
     private int id;
-    private String nombreCliente;
+    private Clientes cliente; // MODIFICADO: Para integrar clase Clientes
     private Articulos[] articulo;
     private EstadoPedido estado;
     private int numeroArticulos;
 
     // Constructor del pedido
-    public Pedidos(String nombreCliente) {
-        if (nombreCliente == null || nombreCliente.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del cliente no puede estar vacío");
+    public Pedidos(Clientes cliente) {
+        if (cliente == null) {
+            throw new IllegalArgumentException("El pedido debe tener un cliente válido");
         }
 
         this.id = contador++;
-        this.nombreCliente = nombreCliente.trim();
+        this.cliente = cliente; // MODIFICADO: Para integrar tu clase Clientes
         this.articulo = new Articulos[MAX_ARTICULOS];
         this.numeroArticulos = 0;
         this.estado = EstadoPedido.EN_PREPARACION;
@@ -59,7 +61,7 @@ public class Pedidos {
     public double total() {
         double total = 0;
         for (int i = 0; i < numeroArticulos; i++) {
-            total += Articulos.subtotal();
+            total += articulo[i].subtotal(); // MODIFICADO: llamada a método de instancia
         }
         return total + impuesto();
     }
@@ -89,7 +91,7 @@ public class Pedidos {
     public void resumen() {
         System.out.println("=".repeat(50));
         System.out.println("Número de pedido: #" + id);
-        System.out.println("Cliente: " + nombreCliente);
+        System.out.println("Cliente: " + cliente.getNombre() + " | DNI: " + cliente.getDni()); // MODIFICADO: Para integrar clase Clientes
         System.out.println("Estado: " + estado.getDescripcion());
         System.out.println("Artículos:");
 
@@ -106,15 +108,15 @@ public class Pedidos {
 
     public String toString() {
         return String.format("Pedido #%d - %s (%s) - %.2f€",
-                            id, nombreCliente, estado.getDescripcion(), total());
+                            id, cliente, estado.getDescripcion(), total());
     }
 
     public int getId() {
         return id;
     }
 
-    public String getNombreCliente() {
-        return nombreCliente;
+    public Clientes getNombreCliente() {
+        return cliente;
     }
 
     public EstadoPedido getEstado() {
@@ -137,11 +139,11 @@ public class Pedidos {
         return articulo[index];
     }
 
-    public void setNombreCliente(String nombreCliente) {
-        if (nombreCliente == null || nombreCliente.trim().isEmpty()) {
+    public void setNombreCliente(Clientes cliente) {
+        if (cliente == null) {
             throw new IllegalArgumentException("El nombre del cliente no puede estar vacío");
         }
-        this.nombreCliente = nombreCliente.trim();
+        this.cliente = cliente;
     }
 
     public int getSiguienteId() {
