@@ -2,8 +2,8 @@ package model;
 
 public class Articulos {
     private String nombre;
-    private static int cantidad;
-    private static double precioUnitario;
+    private int cantidad;    // MODIFICADO: Quitada palabra 'static'
+    private double precioUnitario;   // MODIFICADO: Quitada palabra 'static'
 
     // Constructor del artículo con validación de parámetros
     public Articulos(String nombre, int cantidad, double precioUnitario) {
@@ -22,7 +22,8 @@ public class Articulos {
         this.precioUnitario = precioUnitario;
     }
 
-    public static double subtotal() {
+    // MODIFICADO: Quitada palabra 'static' para que calcule el total de ESTE artículo
+    public double subtotal() {
         return cantidad * precioUnitario;
     }
 
